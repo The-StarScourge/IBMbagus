@@ -1,0 +1,290 @@
+{
+  "id": "a1b2c3d4-0001-0001-0001-a1b2c3d40001",
+  "name": "SiAkad Buddy — Ingest",
+  "description": "Ingests PDF academic guidebook into Astra DB vector store.",
+  "data": {
+    "nodes": [
+      {
+        "id": "file-node-001",
+        "type": "genericNode",
+        "position": { "x": 100, "y": 300 },
+        "data": {
+          "type": "File",
+          "id": "file-node-001",
+          "node": {
+            "display_name": "Read File",
+            "description": "Upload the PDF academic guidebook.",
+            "documentation": "",
+            "base_classes": ["Data"],
+            "template": {
+              "path": {
+                "field_type": "file",
+                "file_types": [".pdf", ".txt", ".docx"],
+                "value": "",
+                "required": true,
+                "placeholder": "Upload PDF file",
+                "show": true,
+                "name": "path",
+                "display_name": "Path",
+                "advanced": false
+              },
+              "silent_errors": {
+                "field_type": "bool",
+                "value": false,
+                "required": false,
+                "show": false,
+                "name": "silent_errors",
+                "display_name": "Silent Errors",
+                "advanced": true
+              }
+            },
+            "outputs": [
+              {
+                "name": "data",
+                "display_name": "Data",
+                "types": ["Data"],
+                "selected": "Data"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "split-node-001",
+        "type": "genericNode",
+        "position": { "x": 450, "y": 300 },
+        "data": {
+          "type": "SplitText",
+          "id": "split-node-001",
+          "node": {
+            "display_name": "Split Text",
+            "description": "Splits document into overlapping chunks.",
+            "documentation": "",
+            "base_classes": ["Data"],
+            "template": {
+              "data_inputs": {
+                "field_type": "Data",
+                "value": "",
+                "required": true,
+                "show": true,
+                "name": "data_inputs",
+                "display_name": "Data Inputs",
+                "advanced": false,
+                "list": true
+              },
+              "chunk_size": {
+                "field_type": "int",
+                "value": 1000,
+                "required": false,
+                "show": true,
+                "name": "chunk_size",
+                "display_name": "Chunk Size",
+                "advanced": false
+              },
+              "chunk_overlap": {
+                "field_type": "int",
+                "value": 150,
+                "required": false,
+                "show": true,
+                "name": "chunk_overlap",
+                "display_name": "Chunk Overlap",
+                "advanced": false
+              },
+              "separator": {
+                "field_type": "str",
+                "value": "\n",
+                "required": false,
+                "show": true,
+                "name": "separator",
+                "display_name": "Separator",
+                "advanced": false
+              }
+            },
+            "outputs": [
+              {
+                "name": "chunks",
+                "display_name": "Chunks",
+                "types": ["Data"],
+                "selected": "Data"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "astra-ingest-node-001",
+        "type": "genericNode",
+        "position": { "x": 850, "y": 300 },
+        "data": {
+          "type": "AstraDBVectorStore",
+          "id": "astra-ingest-node-001",
+          "node": {
+            "display_name": "Astra DB",
+            "description": "Stores document chunks as vectors in Astra DB.",
+            "documentation": "",
+            "base_classes": ["VectorStore"],
+            "template": {
+              "token": {
+                "field_type": "str",
+                "value": "",
+                "required": true,
+                "show": true,
+                "password": true,
+                "name": "token",
+                "display_name": "Astra DB Application Token",
+                "advanced": false
+              },
+              "api_endpoint": {
+                "field_type": "str",
+                "value": "",
+                "required": true,
+                "show": true,
+                "name": "api_endpoint",
+                "display_name": "API Endpoint",
+                "advanced": false
+              },
+              "collection_name": {
+                "field_type": "str",
+                "value": "pedoman_akademik",
+                "required": true,
+                "show": true,
+                "name": "collection_name",
+                "display_name": "Collection Name",
+                "advanced": false
+              },
+              "namespace": {
+                "field_type": "str",
+                "value": "",
+                "required": false,
+                "show": true,
+                "name": "namespace",
+                "display_name": "Namespace",
+                "advanced": true
+              },
+              "ingest_data": {
+                "field_type": "Data",
+                "value": "",
+                "required": false,
+                "show": true,
+                "name": "ingest_data",
+                "display_name": "Ingest Data",
+                "advanced": false,
+                "list": true
+              },
+              "embedding": {
+                "field_type": "Embeddings",
+                "value": "",
+                "required": true,
+                "show": true,
+                "name": "embedding",
+                "display_name": "Embedding",
+                "advanced": false
+              },
+              "search_type": {
+                "field_type": "str",
+                "value": "Similarity",
+                "required": false,
+                "show": false,
+                "name": "search_type",
+                "display_name": "Search Type",
+                "advanced": true
+              },
+              "number_of_results": {
+                "field_type": "int",
+                "value": 4,
+                "required": false,
+                "show": false,
+                "name": "number_of_results",
+                "display_name": "Number of Results",
+                "advanced": true
+              }
+            },
+            "outputs": [
+              {
+                "name": "vector_store",
+                "display_name": "Vector Store",
+                "types": ["VectorStore"],
+                "selected": "VectorStore"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "gemini-embed-ingest-001",
+        "type": "genericNode",
+        "position": { "x": 600, "y": 600 },
+        "data": {
+          "type": "GoogleGenerativeAIEmbeddings",
+          "id": "gemini-embed-ingest-001",
+          "node": {
+            "display_name": "Google Generative AI Embeddings",
+            "description": "Gemini embedding model for vector encoding.",
+            "documentation": "",
+            "base_classes": ["Embeddings"],
+            "template": {
+              "api_key": {
+                "field_type": "str",
+                "value": "",
+                "required": true,
+                "show": true,
+                "password": true,
+                "name": "api_key",
+                "display_name": "Google API Key",
+                "advanced": false
+              },
+              "model": {
+                "field_type": "str",
+                "value": "models/gemini-embedding-001",
+                "required": false,
+                "show": true,
+                "name": "model",
+                "display_name": "Model",
+                "advanced": false
+              }
+            },
+            "outputs": [
+              {
+                "name": "embeddings",
+                "display_name": "Embeddings",
+                "types": ["Embeddings"],
+                "selected": "Embeddings"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-file-to-split",
+        "source": "file-node-001",
+        "target": "split-node-001",
+        "sourceHandle": "file-node-001|data|0",
+        "targetHandle": "split-node-001|data_inputs|0",
+        "animated": false
+      },
+      {
+        "id": "edge-split-to-astra",
+        "source": "split-node-001",
+        "target": "astra-ingest-node-001",
+        "sourceHandle": "split-node-001|chunks|0",
+        "targetHandle": "astra-ingest-node-001|ingest_data|0",
+        "animated": false
+      },
+      {
+        "id": "edge-embed-to-astra",
+        "source": "gemini-embed-ingest-001",
+        "target": "astra-ingest-node-001",
+        "sourceHandle": "gemini-embed-ingest-001|embeddings|0",
+        "targetHandle": "astra-ingest-node-001|embedding|0",
+        "animated": false
+      }
+    ],
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 0.85
+    }
+  }
+}

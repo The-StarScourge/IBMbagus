@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SiAkad Buddy — Asisten akademik virtual berbasis pedoman akademik kampus." />
+  <title>SiAkad Buddy</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside id="sidebar" aria-label="Daftar topik akademik">
+      <div id="sidebar-header">
+        <span id="logo" aria-hidden="true">🎓</span>
+        <div>
+          <h1 id="app-title">SiAkad Buddy</h1>
+          <p id="app-subtitle">Asisten Akademik</p>
+        </div>
+      </div>
+      <p id="sidebar-hint">Klik topik untuk mengajukan pertanyaan:</p>
+      <nav aria-label="Topik akademik">
+        <ul id="topic-list">
+          <!-- Populated dynamically by script.js -->
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- ═══ MAIN CHAT PANEL ═══ -->
+    <main id="chat-panel" aria-label="Area percakapan">
+
+      <!-- Chat messages container -->
+      <div id="chat-messages" role="log" aria-live="polite" aria-relevant="additions" tabindex="0">
+        <!-- Bubbles appended here by script.js -->
+      </div>
+
+      <!-- Typing indicator -->
+      <div id="typing-indicator" aria-live="polite" aria-label="Bot sedang mencari" hidden>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span id="typing-text">Mencari di pedoman…</span>
+      </div>
+
+      <!-- Input form -->
+      <form id="chat-form" autocomplete="off" novalidate aria-label="Form pertanyaan">
+        <label for="chat-input" class="sr-only">Ketik pertanyaan Anda</label>
+        <input
+          id="chat-input"
+          type="text"
+          placeholder="Ketik pertanyaan akademik Anda…"
+          maxlength="300"
+          aria-describedby="disclaimer"
+          required
+        />
+        <button type="submit" id="send-btn" aria-label="Kirim pertanyaan">
+          <span aria-hidden="true">&#9658;</span> Kirim
+        </button>
+      </form>
+
+      <!-- Action bar -->
+      <div id="action-bar">
+        <button id="restart-btn" type="button" aria-label="Mulai ulang percakapan">
+          &#8635; Mulai Ulang
+        </button>
+      </div>
+
+      <!-- Disclaimer -->
+      <p id="disclaimer" role="note">
+        ⚠️ Informasi bersumber dari pedoman akademik yang tertanam di sistem ini.
+        Aturan dapat berubah — selalu konfirmasi ke bagian akademik kampus untuk keputusan resmi.
+      </p>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
